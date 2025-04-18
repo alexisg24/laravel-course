@@ -12,3 +12,15 @@ services:
     ports:
       - 3306:3306
     restart: unless-stopped
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    restart: always
+    depends_on:
+      - mariadb
+    environment:
+      PMA_HOST: mariadb
+      PMA_USER: my_user
+      PMA_PASSWORD: my_pwd
+    ports:
+      - "8081:80"
