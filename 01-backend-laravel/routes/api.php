@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BackendController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\QueriesController;
 use Illuminate\Support\Facades\Route;
 
@@ -22,6 +23,8 @@ Route::get('/query/method/searchString/{value}', [QueriesController::class, "sea
 Route::post('/query/method/advancedSearch', [QueriesController::class, "advancedSearch"]);
 Route::get('/query/method/join', [QueriesController::class, "join"]);
 Route::get('/query/method/groupby', [QueriesController::class, "groupBy"]);
+
+Route::apiResource("/product", ProductController::class);
 
 
 // Optional: /backend/{id?}
