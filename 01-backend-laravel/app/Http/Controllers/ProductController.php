@@ -56,4 +56,10 @@ class ProductController extends Controller
             return response()->json(["error" => $th], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
+    public function destroy(Product $product)
+    {
+        $product->delete();
+        return response()->json(["message" => "Product deleted successfully"], Response::HTTP_OK);
+    }
 }
