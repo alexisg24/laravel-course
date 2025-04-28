@@ -3,6 +3,7 @@
 use App\Http\Controllers\BackendController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\QueriesController;
+use App\Http\Middleware\LogRequest;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/test', function () {
@@ -22,9 +23,12 @@ Route::get('/query/method/search/{name}/{price}', [QueriesController::class, "se
 Route::get('/query/method/searchString/{value}', [QueriesController::class, "searchString"]);
 Route::post('/query/method/advancedSearch', [QueriesController::class, "advancedSearch"]);
 Route::get('/query/method/join', [QueriesController::class, "join"]);
-Route::get('/query/method/groupby', [QueriesController::class, "groupBy"]);
+Route::get('/query/method/groupby', [QueriesController::class, "groupBy"])->middleware("auth:1234,rolname");
 
-Route::apiResource("/product", ProductController::class);
+Route::apiResource("/product", ProductController::class)
+    // Middleware in route group
+    // ->middleware([CheckValueInHeader::class, UppercaseName::class]);
+    ->middleware([LogRequest::class]);
 
 
 // Optional: /backend/{id?}
