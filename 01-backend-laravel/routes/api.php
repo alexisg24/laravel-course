@@ -29,8 +29,14 @@ Route::get('/query/method/groupby', [QueriesController::class, "groupBy"])->midd
 Route::apiResource("/product", ProductController::class)
     // Middleware in route group
     // ->middleware([CheckValueInHeader::class, UppercaseName::class]);
-    ->middleware([LogRequest::class]);
+    ->middleware(["jwt.auth", LogRequest::class]);
 
 Route::post('/register', [AuthController::class, "register"]);
 Route::post('/login', [AuthController::class, "login"])->name("login");
 // Optional: /backend/{id?}
+
+Route::middleware("jwt.auth")->group(function () {
+    Route::get('/user', [AuthController::class, "getUserFromToJWT"]);
+    Route::post('/logout', [AuthController::class, "logout"]);
+    Route::post('/refresh', [AuthController::class, "refresh"]);
+});

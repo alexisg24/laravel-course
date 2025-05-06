@@ -6,6 +6,7 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -49,6 +50,49 @@ class AuthController extends Controller
         }
 
         return $this->respondWithToken($token);
+    }
+
+    public function getUserFromToJWT()
+    {
+        $user = auth()->user();
+        return response()->json([
+            "message" => "User retrieved successfully",
+            "data" => $user
+        ], Response::HTTP_OK);
+    }
+
+    public function logout()
+    {
+        try {
+            $token = JWTAuth::getToken();
+            JWTAuth::invalidate($token);
+
+            return response()->json([
+                "message" => "User logged out successfully",
+                "data" => true
+            ]);
+        } catch (JWTException $th) {
+            return response()->json([
+                "message" => $th->getMessage(),
+                "data" => null
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function refresh()
+    {
+        try {
+            $token = JWTAuth::getToken();
+            $newToken = JWTAuth::refresh($token);
+            JWTAuth::invalidate($token);
+
+            return $this->respondWithToken($newToken);
+        } catch (JWTException $th) {
+            return response()->json([
+                "message" => $th->getMessage(),
+                "data" => null
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     protected function respondWithToken($token)
