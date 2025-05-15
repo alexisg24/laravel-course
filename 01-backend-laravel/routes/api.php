@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApiController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BackendController;
 use App\Http\Controllers\ProductController;
@@ -40,3 +41,6 @@ Route::middleware("jwt.auth")->group(function () {
     Route::post('/logout', [AuthController::class, "logout"]);
     Route::post('/refresh', [AuthController::class, "refresh"]);
 });
+
+
+Route::get('/api', [ApiController::class, "get"]);
